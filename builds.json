@@ -1,0 +1,16 @@
+[
+  {
+    "build_id": "zcode-cli-0.17.0-win-x64",
+    "version": "0.17.0",
+    "size": 15243891,
+    "sha256": "a055234a6ca3da0172616d3987cf3c617b6a26deb1332d69035300c2a0ae0de1",
+    "verdict": "good-negative"
+  },
+  {
+    "build_id": "zcode-cli-0.17.1-win-x64",
+    "version": "0.17.1",
+    "size": 15405921,
+    "sha256": "395307aba9b59ba6a099f4941b073ec7a8b53fe4154e4e75af65b3703d2e6d36",
+    "verdict": "target-ready"
+  }
+]

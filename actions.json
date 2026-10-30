@@ -1,0 +1,170 @@
+[
+  {
+    "id": "p1",
+    "target_build": "0.17.1",
+    "anchor": {
+      "literal": "foldRemindersIntoToolResults:e===",
+      "expect_count": 1
+    },
+    "locate": {
+      "window": "provider request-capability assembly: attribute foldRemindersIntoToolResults compared against module-local constant Slo=\"anthropic-messages\"; module 'var Slo,obn=W(()=>{', Slo defined once in same module",
+      "boundary_spec": "span = anchor literal + trailing 3 bytes which must equal 'Slo' (completes the attribute value 'foldRemindersIntoToolResults:e===Slo'); end = anchor_start + 33 + 3 = 4116866. Boundary-resolved span == registered span (never the bare anchor indexOf position). Measured byte after span end: '}' (window '}}va')."
+    },
+    "apply": {
+      "kind": "replace",
+      "payload": "foldRemindersIntoToolResults:!1"
+    },
+    "verify": [
+      "span_post: bytes at [span.start, span.start+31) == 'foldRemindersIntoToolResults:!1' (exact new-byte string)",
+      "anchor_global_post: count of 'foldRemindersIntoToolResults:e===' in patched file == 0",
+      "anchor_global_post: count of 'foldRemindersIntoToolResults:!1' in patched file == 1"
+    ],
+    "rollback": "rewrite span [4116830,4116866) with the original 36 bytes recorded in manifest.patch_spans (original bytes fully recorded); span offsets stable across apply because all spans are pairwise disjoint",
+    "span": [4116830, 4116866],
+    "evidence": {
+      "source": "registration-time byte-level verification against the shipped 0.17.1 bundle and a stock 0.17.0 bundle",
+      "anchor_rule": "long context string containing an obfuscated identifier - anchor unique in target build (B=1), absent in 0.17.0 (A=0); offset 4,116,830 verified 2026-10-30",
+      "counts": { "target_B": 1, "good_A": 0 },
+      "offset": {
+        "registered": 4116830,
+        "baseline": "independent third-party byte measurement, cross-checked with two tools on 2026-10-30"
+      },
+      "recheck_20261030": {
+        "tool_primary": "node:buffer latin1 indexOf",
+        "tool_cross": "grep -aoF",
+        "B": 1,
+        "A": 0,
+        "gate": "target sample sha256 == 395307aba9b59ba6a099f4941b073ec7a8b53fe4154e4e75af65b3703d2e6d36 verified before measuring"
+      }
+    }
+  },
+  {
+    "id": "p2",
+    "target_build": "0.17.1",
+    "anchor": {
+      "literal": "\"session_context\",\"environment\",\"model\",\"output_style_instructions\",\"date\",\"skills_listing\",\"gen_ui_state\"",
+      "expect_count": 1
+    },
+    "locate": {
+      "window": "system-reminder ordered type list: array literal RHS assigned to $Tn inside '()=>{\"use strict\";$Tn=[...]' module; array opening '[' sits exactly 18 bytes before anchor start; array closes with ']' immediately after final element 'shell_environment_change\"'",
+      "boundary_spec": "span = the WHOLE array literal RHS: start = anchor_start-18 = 5008032 (byte MUST be '['), end = just past the ']' that directly follows 'shell_environment_change\"' scanning forward from the anchor = 5008630. Registration asserts span first byte=='[' and last byte==']'. Boundary-resolved span == registered span; using the bare anchor position as span is FORBIDDEN (anchor is an array-internal substring: a bare-anchor replace would nest the payload array and silently neutralize the patch). Measured bytes after span end: ',A0a=[\"incoming_message\",...'."
+    },
+    "apply": {
+      "kind": "replace",
+      "payload": "[\"context_prefix\",\"skills_listing\"]"
+    },
+    "verify": [
+      "span_post: bytes at [span.start, span.start+35) == '[\"context_prefix\",\"skills_listing\"]' (exact new-byte string)",
+      "anchor_global_post: count of the 7-item anchor literal in patched file == 0",
+      "anchor_global_post: count of 'session_context' in patched file == 24 (pre-patch 26; the removed 598-byte array region contains two occurrences: item \"session_context\" and item \"resume_referenced_session_context\")",
+      "span_struct_post: patched span first byte == '[' and last byte == ']' (bracket assertion, mirrored post-apply)"
+    ],
+    "rollback": "rewrite span [5008032,5008630) with the original 598 bytes (full original array literal) recorded in manifest.patch_spans",
+    "span": [5008032, 5008630],
+    "evidence": {
+      "source": "registration-time byte-level verification against the shipped 0.17.1 bundle and a stock 0.17.0 bundle",
+      "anchor_rule": "internal substring of the reminder-type array literal - anchor unique in target build (B=1), absent in 0.17.0 (A=0); offset 5,008,050 verified 2026-10-30",
+      "counts": { "target_B": 1, "good_A": 0 },
+      "offset": {
+        "registered": 5008050,
+        "baseline": "independent third-party byte measurement, cross-checked with two tools on 2026-10-30; the array literal '[' sits 18 bytes before the anchor"
+      },
+      "span_registration_asserts": { "first_byte": "[", "last_byte": "]", "span_len": 598, "array_items": 29, "anchor_at": "span.start+18", "verified_20261030": true },
+      "residual_types_harmless": "reminder types trimmed from the list stay registered in the channel mapping but are never invoked once absent from the runtime list; the two prefix channels are retargeted by p3-1/p3-2",
+      "form_note": "payload restores the 0.17.0 two-item list form, keeping the target-build variable name; measured post-patch count('request_prefix') 0->4 == 0.17.0 count 4"
+    }
+  },
+  {
+    "id": "p3-1",
+    "target_build": "0.17.1",
+    "anchor": {
+      "literal": "context_prefix:tf(\"current_turn\",\"resume_history\",!0,\"sr.context_prefix\")",
+      "expect_count": 1
+    },
+    "locate": {
+      "window": "reminder channel mapping object literal O0a: context_prefix entry; the skills_listing entry of identical shape follows immediately after one comma byte",
+      "boundary_spec": "span = the FULL anchor string exactly (anchor_start .. anchor_start+73 = 5009914); no bytes consumed beyond the anchor. Boundary-resolved span == registered span. Measured byte at span end: ',' (separates the p3-2 entry; unique adjacent pair, 1-byte gap = legal half-open disjointness)."
+    },
+    "apply": {
+      "kind": "replace",
+      "payload": "context_prefix:tf(\"request_prefix\",\"request_prefix\",!0,\"sr.context_prefix\")"
+    },
+    "verify": [
+      "span_post: bytes at [span.start, span.start+75) == 'context_prefix:tf(\"request_prefix\",\"request_prefix\",!0,\"sr.context_prefix\")' (exact new-byte string)",
+      "anchor_global_post: count of the anchor literal in patched file == 0",
+      "tail_integrity: count of '\"sr.context_prefix\"' in patched file == 1 (4th argument preserved verbatim; anti-corrosion guard)"
+    ],
+    "rollback": "rewrite span [5009841,5009914) with the original 73 bytes recorded in manifest.patch_spans",
+    "span": [5009841, 5009914],
+    "evidence": {
+      "source": "registration-time byte-level verification against the shipped 0.17.1 bundle and a stock 0.17.0 bundle",
+      "anchor_rule": "full call string containing an obfuscated callee - anchor unique in target build (B=1), absent in 0.17.0 (A=0); offset 5,009,841 verified 2026-10-30",
+      "counts": { "target_B": 1, "good_A": 0 },
+      "offset": { "registered": 5009841, "baseline": "independent third-party byte measurement, cross-checked with two tools on 2026-10-30" },
+      "payload_rule": "in-string swap of arguments 1 and 2 only (current_turn,resume_history -> request_prefix,request_prefix); tail '!0,\"sr.context_prefix\"' is byte-identical in both builds; payload stated in full - no cross-version byte grafting",
+      "effect_note": "the 0.17.0 bundle uses the same argument shape under a differently named callee; the patch restores the argument form only"
+    }
+  },
+  {
+    "id": "p3-2",
+    "target_build": "0.17.1",
+    "anchor": {
+      "literal": "skills_listing:tf(\"current_turn\",\"resume_history\",!0,\"sr.skills_listing\")",
+      "expect_count": 1
+    },
+    "locate": {
+      "window": "reminder channel mapping object literal O0a: skills_listing entry, same shape as p3-1 and immediately adjacent (probe anchor 'skills_listing:tf(' measured B=1/A=0 as location aid; the registered anchor is the FULL string, itself verified B=1/A=0 at registration)",
+      "boundary_spec": "span = the FULL anchor string exactly (anchor_start .. anchor_start+73 = 5009988); no bytes consumed beyond the anchor. Boundary-resolved span == registered span. Measured byte before span start: ',' (1-byte adjacency with p3-1); measured byte at span end: ',' (next O0a entry)."
+    },
+    "apply": {
+      "kind": "replace",
+      "payload": "skills_listing:tf(\"request_prefix\",\"request_prefix\",!0,\"sr.skills_listing\")"
+    },
+    "verify": [
+      "span_post: bytes at [span.start, span.start+75) == 'skills_listing:tf(\"request_prefix\",\"request_prefix\",!0,\"sr.skills_listing\")' (exact new-byte string)",
+      "anchor_global_post: count of the anchor literal in patched file == 0",
+      "tail_integrity: count of '\"sr.skills_listing\"' == 1 AND count of '\"sr.context_prefix\"' == 1 in patched file (payload bytes are NOT reused from p3-1 - corrosion guard)",
+      "form_global_post: count of 'request_prefix' in patched file == 4 (matches 0.17.0 A-side count; 0.17.1 pre-patch count 0)"
+    ],
+    "rollback": "rewrite span [5009915,5009988) with the original 73 bytes recorded in manifest.patch_spans",
+    "span": [5009915, 5009988],
+    "evidence": {
+      "source": "registration-time byte-level verification against the shipped 0.17.1 bundle and a stock 0.17.0 bundle",
+      "anchor_rule": "full call string containing an obfuscated callee - anchor unique in target build (B=1), absent in 0.17.0 (A=0), verified both as the full string and via a shorter probe; offset 5,009,915 verified 2026-10-30",
+      "counts": { "target_B": 1, "good_A": 0 },
+      "offset": { "registered": 5009915, "baseline": "independent third-party byte measurement, cross-checked with two tools on 2026-10-30; full-string registration recheck matches the probe offset (span start == probe offset)" },
+      "payload_rule": "in-string swap of arguments 1 and 2 only; tail '!0,\"sr.skills_listing\"' is byte-identical in both builds; payload stated in full - reusing p3-1 payload bytes is forbidden (would silently overwrite sr.skills_listing with sr.context_prefix)"
+    }
+  },
+  {
+    "id": "p4",
+    "target_build": "0.17.1",
+    "anchor": {
+      "literal": "function GXs(e){if(e===void 0||e.length===0",
+      "expect_count": 1
+    },
+    "locate": {
+      "window": "sessionFeaturesHeaderValueOf implementation: function GXs head (value builder for header x-zcode-session-features)",
+      "boundary_spec": "insert point = function body start = anchor_start + len('function GXs(e){') = anchor_start+16 = 4106759; NOT the anchor tail (anchor tail falls inside the if-condition -> syntax error). Zero-length span [4106759,4106759). First 16 bytes at anchor start MUST equal 'function GXs(e){'; measured byte at insert point: 'i' (start of 'if(')."
+    },
+    "apply": {
+      "kind": "insert",
+      "payload": "return;"
+    },
+    "verify": [
+      "span_post: bytes at [insert_point, insert_point+7) == 'return;' (exact new-byte string)",
+      "anchor_global_post: count of 'function GXs(e){' in patched file == 1 AND count of the full anchor literal == 0 (the body-start insert necessarily splits the anchor literal right after '{')",
+      "boundary_post: byte at insert_point-1 == '{' (insert strictly at body start)"
+    ],
+    "rollback": "remove the 7 inserted bytes at [4106759,4106766) restoring the original zero-length span; insertion recorded in manifest (actions_applied/patch_spans)",
+    "span": [4106759, 4106759],
+    "evidence": {
+      "source": "registration-time byte-level verification against the shipped 0.17.1 bundle and a stock 0.17.0 bundle",
+      "anchor_rule": "function-head context string containing an obfuscated name - anchor unique in target build (B=1), absent in 0.17.0 (A=0); offset 4,106,743 verified 2026-10-30",
+      "counts": { "target_B": 1, "good_A": 0 },
+      "offset": { "registered": 4106743, "baseline": "independent third-party byte measurement, cross-checked with two tools on 2026-10-30" },
+      "effect_note": "GXs returns void 0 on its first statement -> header x-zcode-session-features never sent; the header-name constant remains in the bundle by design",
+      "live_bisect_note": "recommended activation order P1 -> P2(+P3) -> P4 can be exercised via temporary subset tables; this file registers all 5 entries at once"
+    }
+  }
+]
